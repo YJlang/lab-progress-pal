@@ -14,10 +14,89 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      students: {
+        Row: {
+          academic_year: string
+          checklist_items: Json
+          completed_stages: string[]
+          created_at: string
+          current_stage: string
+          department: string | null
+          id: string
+          last_updated_at: string
+          name: string
+          pin_code: string
+          progress_note: string
+        }
+        Insert: {
+          academic_year: string
+          checklist_items?: Json
+          completed_stages?: string[]
+          created_at?: string
+          current_stage?: string
+          department?: string | null
+          id?: string
+          last_updated_at?: string
+          name: string
+          pin_code: string
+          progress_note?: string
+        }
+        Update: {
+          academic_year?: string
+          checklist_items?: Json
+          completed_stages?: string[]
+          created_at?: string
+          current_stage?: string
+          department?: string | null
+          id?: string
+          last_updated_at?: string
+          name?: string
+          pin_code?: string
+          progress_note?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      students_public: {
+        Row: {
+          academic_year: string | null
+          checklist_items: Json | null
+          completed_stages: string[] | null
+          created_at: string | null
+          current_stage: string | null
+          department: string | null
+          id: string | null
+          last_updated_at: string | null
+          name: string | null
+          progress_note: string | null
+        }
+        Insert: {
+          academic_year?: string | null
+          checklist_items?: Json | null
+          completed_stages?: string[] | null
+          created_at?: string | null
+          current_stage?: string | null
+          department?: string | null
+          id?: string | null
+          last_updated_at?: string | null
+          name?: string | null
+          progress_note?: string | null
+        }
+        Update: {
+          academic_year?: string | null
+          checklist_items?: Json | null
+          completed_stages?: string[] | null
+          created_at?: string | null
+          current_stage?: string | null
+          department?: string | null
+          id?: string | null
+          last_updated_at?: string | null
+          name?: string | null
+          progress_note?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
