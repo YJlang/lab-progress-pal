@@ -32,7 +32,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { STAGE_KEYS, type StageKey, type ChecklistState } from "@/lib/stages";
+import {
+  STAGE_KEYS,
+  STAGES,
+  STAGE_STATUS_OPTIONS,
+  type StageKey,
+  type StageStatuses,
+  type StageStatus,
+  type ChecklistState,
+} from "@/lib/stages";
 import { updateStudent, deleteStudent } from "@/lib/students.functions";
 import type { Student } from "@/lib/types";
 import { ChecklistSection } from "./ChecklistSection";
@@ -52,8 +60,13 @@ export function EditStudentModal({ open, student, pin, onClose }: Props) {
   const [name, setName] = useState(student.name);
   const [academicYear, setAcademicYear] = useState(student.academicYear);
   const [department, setDepartment] = useState(student.department ?? "");
-  const [currentStage, setCurrentStage] = useState<StageKey>(student.currentStage);
-  const [completedStages, setCompletedStages] = useState<StageKey[]>(student.completedStages);
+  const [representativeStage, setRepresentativeStage] = useState<StageKey>(
+    student.representativeStage,
+  );
+  const [stageStatuses, setStageStatuses] = useState<StageStatuses>(student.stageStatuses);
+  const [notesByStage, setNotesByStage] = useState<Partial<Record<StageKey, string>>>(
+    student.notesByStage,
+  );
   const [checklist, setChecklist] = useState<ChecklistState>(student.checklistItems);
   const [progressNote, setProgressNote] = useState(student.progressNote);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -63,8 +76,9 @@ export function EditStudentModal({ open, student, pin, onClose }: Props) {
       setName(student.name);
       setAcademicYear(student.academicYear);
       setDepartment(student.department ?? "");
-      setCurrentStage(student.currentStage);
-      setCompletedStages(student.completedStages);
+      setRepresentativeStage(student.representativeStage);
+      setStageStatuses(student.stageStatuses);
+      setNotesByStage(student.notesByStage);
       setChecklist(student.checklistItems);
       setProgressNote(student.progressNote);
     }
@@ -80,8 +94,11 @@ export function EditStudentModal({ open, student, pin, onClose }: Props) {
             name,
             academicYear,
             department,
-            currentStage,
-            completedStages,
+            representativeStage,
+            stageStatuses,
+            notesByStage: notesByStage as Record<string, string>,
+            currentStage: representativeStage,
+            completedStages: [],
             checklistItems: checklist as Record<string, Record<string, boolean>>,
             progressNote,
           },
@@ -93,7 +110,8 @@ export function EditStudentModal({ open, student, pin, onClose }: Props) {
       qc.invalidateQueries({ queryKey: ["student", student.id] });
       onClose();
     },
-    onError: (e: Error) => toast.error(e.message || "저장 중 문제가 발생했습니다. 다시 시도해주세요."),
+    onError: (e: Error) =>
+      toast.error(e.message || "저장 중 문제가 발생했습니다. 다시 시도해주세요."),
   });
 
   const remove = useMutation({
@@ -107,10 +125,8 @@ export function EditStudentModal({ open, student, pin, onClose }: Props) {
     onError: (e: Error) => toast.error(e.message || "삭제 중 문제가 발생했습니다."),
   });
 
-  function toggleCompleted(k: StageKey, on: boolean) {
-    setCompletedStages((prev) =>
-      on ? Array.from(new Set([...prev, k])) : prev.filter((s) => s !== k),
-    );
+  function setStatus(key: StageKey, status: StageStatus) {
+    setStageStatuses((prev) => ({ ...prev, [key]: status }));
   }
 
   return (
@@ -120,14 +136,15 @@ export function EditStudentModal({ open, student, pin, onClose }: Props) {
           <DialogHeader>
             <DialogTitle>{student.name} 정보 수정</DialogTitle>
             <DialogDescription>
-              학생의 기본 정보와 단계별 체크리스트를 수정할 수 있습니다.
+              기본 정보, 단계별 상태, 체크리스트를 수정할 수 있습니다.
             </DialogDescription>
           </DialogHeader>
 
           <Tabs defaultValue="info" className="flex min-h-0 flex-col">
             <TabsList className="self-start">
               <TabsTrigger value="info">기본 정보</TabsTrigger>
-              <TabsTrigger value="checklist">단계별 체크리스트</TabsTrigger>
+              <TabsTrigger value="stages">단계별 상태</TabsTrigger>
+              <TabsTrigger value="checklist">체크리스트</TabsTrigger>
             </TabsList>
 
             <div className="mt-3 overflow-y-auto pr-1" style={{ maxHeight: "60vh" }}>
@@ -151,50 +168,76 @@ export function EditStudentModal({ open, student, pin, onClose }: Props) {
                     />
                   </Field>
                 </div>
-                <Field label="현재 단계">
-                  <Select value={currentStage} onValueChange={(v) => setCurrentStage(v as StageKey)}>
+                <Field label="대표 단계">
+                  <Select
+                    value={representativeStage}
+                    onValueChange={(v) => setRepresentativeStage(v as StageKey)}
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {STAGE_KEYS.map((k) => (
                         <SelectItem key={k} value={k}>
-                          Stage {k}
+                          Stage {k} — {STAGES.find((s) => s.key === k)?.title}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </Field>
-                <Field label="완료한 단계">
-                  <div className="flex flex-wrap gap-2 rounded-md border bg-card p-2">
-                    {STAGE_KEYS.map((k) => {
-                      const on = completedStages.includes(k);
-                      return (
-                        <button
-                          type="button"
-                          key={k}
-                          onClick={() => toggleCompleted(k, !on)}
-                          className={
-                            "rounded-md border px-2.5 py-1 text-xs font-medium transition-colors " +
-                            (on
-                              ? "border-primary bg-primary text-primary-foreground"
-                              : "border-border bg-background text-muted-foreground hover:bg-muted")
-                          }
-                        >
-                          Stage {k}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </Field>
                 <Field label="학습 메모">
                   <Textarea
                     value={progressNote}
                     onChange={(e) => setProgressNote(e.target.value)}
-                    rows={4}
+                    rows={3}
                     maxLength={500}
                   />
                 </Field>
+              </TabsContent>
+
+              <TabsContent value="stages" className="space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  각 단계의 상태를 독립적으로 설정합니다.
+                </p>
+                {STAGES.map((stage) => (
+                  <div key={stage.key} className="rounded-md border p-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-foreground truncate">
+                          Stage {stage.key} — {stage.title}
+                        </p>
+                        <p className="text-xs text-muted-foreground/70 line-clamp-2">
+                          {stage.fullDescription}
+                        </p>
+                      </div>
+                      <Select
+                        value={stageStatuses[stage.key] ?? "미시작"}
+                        onValueChange={(v) => setStatus(stage.key, v as StageStatus)}
+                      >
+                        <SelectTrigger className="h-8 w-24 text-sm shrink-0">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {STAGE_STATUS_OPTIONS.map((opt) => (
+                            <SelectItem key={opt} value={opt}>
+                              {opt}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="mt-2">
+                      <Input
+                        value={notesByStage[stage.key] ?? ""}
+                        onChange={(e) =>
+                          setNotesByStage((prev) => ({ ...prev, [stage.key]: e.target.value }))
+                        }
+                        placeholder={`${stage.title} 관련 메모...`}
+                        className="h-8 text-sm"
+                      />
+                    </div>
+                  </div>
+                ))}
               </TabsContent>
 
               <TabsContent value="checklist">
@@ -250,7 +293,7 @@ export function EditStudentModal({ open, student, pin, onClose }: Props) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-xs font-medium text-muted-foreground">{label}</Label>
+      <Label className="text-sm font-medium text-muted-foreground">{label}</Label>
       {children}
     </div>
   );

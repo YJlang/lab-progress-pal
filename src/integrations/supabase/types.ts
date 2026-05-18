@@ -7,8 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
@@ -25,8 +23,11 @@ export type Database = {
           id: string
           last_updated_at: string
           name: string
+          notes_by_stage: Json
           pin_code: string
           progress_note: string
+          representative_stage: string
+          stage_statuses: Json
         }
         Insert: {
           academic_year: string
@@ -38,8 +39,11 @@ export type Database = {
           id?: string
           last_updated_at?: string
           name: string
+          notes_by_stage?: Json
           pin_code: string
           progress_note?: string
+          representative_stage?: string
+          stage_statuses?: Json
         }
         Update: {
           academic_year?: string
@@ -51,8 +55,11 @@ export type Database = {
           id?: string
           last_updated_at?: string
           name?: string
+          notes_by_stage?: Json
           pin_code?: string
           progress_note?: string
+          representative_stage?: string
+          stage_statuses?: Json
         }
         Relationships: []
       }
@@ -69,7 +76,10 @@ export type Database = {
           id: string | null
           last_updated_at: string | null
           name: string | null
+          notes_by_stage: Json | null
           progress_note: string | null
+          representative_stage: string | null
+          stage_statuses: Json | null
         }
         Insert: {
           academic_year?: string | null
@@ -81,7 +91,10 @@ export type Database = {
           id?: string | null
           last_updated_at?: string | null
           name?: string | null
+          notes_by_stage?: Json | null
           progress_note?: string | null
+          representative_stage?: string | null
+          stage_statuses?: Json | null
         }
         Update: {
           academic_year?: string | null
@@ -93,7 +106,10 @@ export type Database = {
           id?: string | null
           last_updated_at?: string | null
           name?: string | null
+          notes_by_stage?: Json | null
           progress_note?: string | null
+          representative_stage?: string | null
+          stage_statuses?: Json | null
         }
         Relationships: []
       }

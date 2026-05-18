@@ -1,32 +1,42 @@
-// Client-side read helpers — public data only (PIN excluded via the view).
 import { supabase } from "@/integrations/supabase/client";
-import type { ChecklistState, StageKey } from "./stages";
-import { isStageKey } from "./stages";
+import { isStageKey, DEFAULT_STAGE_STATUSES } from "./stages";
+import type { ChecklistState, StageKey, StageStatuses } from "./stages";
 import type { Student } from "./types";
 
-type Row = {
-  id: string | null;
-  name: string | null;
-  academic_year: string | null;
-  department: string | null;
-  current_stage: string | null;
-  completed_stages: string[] | null;
-  checklist_items: unknown;
-  progress_note: string | null;
-  created_at: string | null;
-  last_updated_at: string | null;
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type RawRow = Record<string, any>;
 
-function mapRow(r: Row): Student {
-  const stage = r.current_stage && isStageKey(r.current_stage) ? (r.current_stage as StageKey) : "1";
-  const completed = (r.completed_stages ?? []).filter(isStageKey) as StageKey[];
+function mapRow(r: RawRow): Student {
+  const _defaultStage: StageKey = "1";
+  const currentStage =
+    r.current_stage && isStageKey(r.current_stage) ? (r.current_stage as StageKey) : _defaultStage;
+  const completed = ((r.completed_stages as string[]) ?? []).filter(isStageKey) as StageKey[];
+  const representativeStage =
+    r.representative_stage && isStageKey(r.representative_stage)
+      ? (r.representative_stage as StageKey)
+      : currentStage;
+
+  const rawStatuses = r.stage_statuses as Record<string, string> | null;
+  const stageStatuses: StageStatuses = { ...DEFAULT_STAGE_STATUSES };
+  if (rawStatuses) {
+    for (const key of Object.keys(DEFAULT_STAGE_STATUSES)) {
+      const v = rawStatuses[key];
+      if (v && ["미시작", "진행 중", "부분 달성", "달성"].includes(v)) {
+        (stageStatuses as Record<string, string>)[key] = v;
+      }
+    }
+  }
+
   return {
     id: r.id ?? "",
     name: r.name ?? "",
     academicYear: r.academic_year ?? "",
     department: r.department,
-    currentStage: stage,
+    currentStage,
     completedStages: completed,
+    representativeStage,
+    stageStatuses,
+    notesByStage: (r.notes_by_stage as Record<string, string>) ?? {},
     checklistItems: (r.checklist_items as ChecklistState) ?? {},
     progressNote: r.progress_note ?? "",
     createdAt: r.created_at ?? "",

@@ -1,10 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Eye, Pencil } from "lucide-react";
 import type { Student } from "@/lib/types";
-import { overallProgress, countCompletedItems, TOTAL_CHECKLIST_ITEMS } from "@/lib/stages";
+import { overallProgress } from "@/lib/stages";
 import { StageBadge } from "./StageBadge";
 import { ProgressBar } from "./ProgressBar";
-import { Button } from "@/components/ui/button";
 
 function formatDate(iso: string) {
   if (!iso) return "—";
@@ -17,19 +15,35 @@ interface RowProps {
   onEdit: (s: Student) => void;
 }
 
-export function StudentTable({ students, onEdit }: { students: Student[]; onEdit: (s: Student) => void }) {
+export function StudentTable({
+  students,
+  onEdit,
+}: {
+  students: Student[];
+  onEdit: (s: Student) => void;
+}) {
   return (
-    <div className="overflow-hidden rounded-lg border bg-card">
+    <div className="overflow-x-auto rounded-lg border bg-card">
       <table className="w-full text-sm">
-        <thead className="border-b bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
+        <thead className="border-b bg-muted/30 text-xs text-muted-foreground">
           <tr>
-            <th className="px-4 py-2.5 text-left font-medium">이름</th>
-            <th className="px-4 py-2.5 text-left font-medium">학년도</th>
-            <th className="px-4 py-2.5 text-left font-medium">학과</th>
-            <th className="px-4 py-2.5 text-left font-medium">현재 단계</th>
-            <th className="px-4 py-2.5 text-left font-medium">진행률</th>
-            <th className="px-4 py-2.5 text-left font-medium">마지막 수정일</th>
-            <th className="px-4 py-2.5 text-right font-medium">동작</th>
+            <th className="px-3 py-2.5 text-left font-medium">이름</th>
+            <th className="px-3 py-2.5 text-left font-medium hidden sm:table-cell">
+              학년도
+            </th>
+            <th className="px-3 py-2.5 text-left font-medium hidden md:table-cell">
+              학과
+            </th>
+            <th className="px-3 py-2.5 text-left font-medium">대표 단계</th>
+            <th className="px-3 py-2.5 text-left font-medium hidden lg:table-cell">
+              진행률
+            </th>
+            <th className="px-3 py-2.5 text-left font-medium hidden xl:table-cell">
+              단계 현황
+            </th>
+            <th className="px-3 py-2.5 text-left font-medium hidden lg:table-cell">
+              수정일
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y">
@@ -43,77 +57,133 @@ export function StudentTable({ students, onEdit }: { students: Student[]; onEdit
 }
 
 function TableRow({ student, onEdit }: RowProps) {
-  const pct = overallProgress(student.checklistItems);
-  const done = countCompletedItems(student.checklistItems);
+  const pct = overallProgress(student.stageStatuses, student.checklistItems);
+
+  const compactStatuses = ["1", "1.5", "2", "2.5", "3", "3.5", "4"] as const;
+  const statusLabel: Record<string, string> = {
+    미시작: "—",
+    "진행 중": "△",
+    "부분 달성": "◑",
+    달성: "●",
+  };
+  const statusColor: Record<string, string> = {
+    미시작: "text-muted-foreground/30",
+    "진행 중": "text-amber-500",
+    "부분 달성": "text-blue-500",
+    달성: "text-emerald-500",
+  };
+
   return (
-    <tr className="hover:bg-muted/30">
-      <td className="px-4 py-3 font-medium text-foreground">{student.name}</td>
-      <td className="px-4 py-3 text-muted-foreground tabular-nums">{student.academicYear}</td>
-      <td className="px-4 py-3 text-muted-foreground">{student.department || "—"}</td>
-      <td className="px-4 py-3">
-        <StageBadge stage={student.currentStage} />
+    <tr
+      className="hover:bg-muted/20 cursor-pointer"
+      onClick={() => {
+        const el = document.querySelector<HTMLAnchorElement>(
+          `a[data-student-link="${student.id}"]`,
+        );
+        el?.click();
+      }}
+    >
+      <td className="px-3 py-2.5">
+        <Link
+          to="/students/$id"
+          params={{ id: student.id }}
+          className="font-medium text-foreground hover:underline"
+          data-student-link={student.id}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {student.name}
+        </Link>
       </td>
-      <td className="px-4 py-3">
-        <div className="flex items-center gap-3">
-          <ProgressBar value={pct} className="w-28" />
-          <span className="text-xs tabular-nums text-muted-foreground">
-            {pct}% · {done}/{TOTAL_CHECKLIST_ITEMS}
-          </span>
+      <td className="px-3 py-2.5 text-muted-foreground tabular-nums hidden sm:table-cell">
+        {student.academicYear}
+      </td>
+      <td className="px-3 py-2.5 text-muted-foreground text-xs hidden md:table-cell">
+        {student.department || "—"}
+      </td>
+      <td className="px-3 py-2.5">
+        <StageBadge stage={student.representativeStage} />
+      </td>
+      <td className="px-3 py-2.5 hidden lg:table-cell">
+        <div className="flex items-center gap-2">
+          <ProgressBar value={pct} className="w-20" />
+          <span className="text-xs tabular-nums text-muted-foreground">{pct}%</span>
         </div>
       </td>
-      <td className="px-4 py-3 text-muted-foreground tabular-nums">{formatDate(student.lastUpdatedAt)}</td>
-      <td className="px-4 py-3 text-right">
-        <div className="flex justify-end gap-1">
-          <Button asChild size="sm" variant="ghost">
-            <Link to="/students/$id" params={{ id: student.id }}>
-              <Eye className="h-4 w-4" />
-              자세히
-            </Link>
-          </Button>
-          <Button size="sm" variant="ghost" onClick={() => onEdit(student)}>
-            <Pencil className="h-4 w-4" />
-            수정
-          </Button>
+      <td className="px-3 py-2.5 hidden xl:table-cell">
+        <div className="flex items-center gap-1.5 text-xs font-mono">
+          {compactStatuses.map((k) => {
+            const s = student.stageStatuses[k] ?? "미시작";
+            return (
+              <span key={k} className={statusColor[s]} title={`S${k}: ${s}`}>
+                {statusLabel[s]}
+              </span>
+            );
+          })}
         </div>
+      </td>
+      <td className="px-3 py-2.5 text-xs text-muted-foreground tabular-nums hidden lg:table-cell">
+        {formatDate(student.lastUpdatedAt)}
       </td>
     </tr>
   );
 }
 
 export function StudentCard({ student, onEdit }: RowProps) {
-  const pct = overallProgress(student.checklistItems);
+  const pct = overallProgress(student.stageStatuses, student.checklistItems);
+
+  const compactStatuses = ["1", "1.5", "2", "2.5", "3", "3.5", "4"] as const;
+
   return (
     <div className="rounded-lg border bg-card p-4">
       <div className="flex items-start justify-between gap-2">
-        <div>
-          <h3 className="text-sm font-semibold text-foreground">{student.name}</h3>
+        <div className="min-w-0">
+          <Link
+            to="/students/$id"
+            params={{ id: student.id }}
+            className="text-sm font-medium text-foreground hover:underline"
+          >
+            {student.name}
+          </Link>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            {student.academicYear} · {student.department || "학과 미입력"}
+            {student.academicYear}
+            {student.department ? ` · ${student.department}` : ""}
           </p>
         </div>
-        <StageBadge stage={student.currentStage} />
+        <StageBadge stage={student.representativeStage} />
       </div>
       <div className="mt-3">
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>진행률</span>
-          <span className="tabular-nums">{pct}%</span>
-        </div>
-        <ProgressBar value={pct} className="mt-1.5" />
+        <ProgressBar value={pct} />
+        <span className="mt-1 block text-xs tabular-nums text-muted-foreground">
+          {pct}%
+        </span>
+      </div>
+      <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+        {compactStatuses.map((k) => {
+          const s = student.stageStatuses[k] ?? "미시작";
+          const cls =
+            s === "달성"
+              ? "text-emerald-600 font-medium"
+              : s === "부분 달성" || s === "진행 중"
+                ? "text-blue-600"
+                : "text-muted-foreground/40";
+          return (
+            <span key={k} className={cls}>
+              S{k}
+            </span>
+          );
+        })}
       </div>
       <div className="mt-3 flex items-center justify-between">
-        <span className="text-xs text-muted-foreground tabular-nums">
-          수정 {formatDate(student.lastUpdatedAt)}
+        <span className="text-xs text-muted-foreground">
+          {formatDate(student.lastUpdatedAt)}
         </span>
-        <div className="flex gap-1">
-          <Button asChild size="sm" variant="ghost">
-            <Link to="/students/$id" params={{ id: student.id }}>
-              자세히
-            </Link>
-          </Button>
-          <Button size="sm" variant="ghost" onClick={() => onEdit(student)}>
-            수정
-          </Button>
-        </div>
+        <Link
+          to="/students/$id"
+          params={{ id: student.id }}
+          className="text-xs text-primary hover:underline"
+        >
+          자세히
+        </Link>
       </div>
     </div>
   );

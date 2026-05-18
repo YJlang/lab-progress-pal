@@ -14,8 +14,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { STAGE_KEYS, type StageKey } from "@/lib/stages";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { STAGE_KEYS, STAGES, type StageKey } from "@/lib/stages";
 import { createStudent } from "@/lib/students.functions";
 import { createStudentSchema } from "@/lib/schemas";
 
@@ -31,7 +37,7 @@ export function AddStudentModal({ open, onOpenChange }: Props) {
     name: "",
     academicYear: "",
     department: "",
-    currentStage: "1" as StageKey,
+    representativeStage: "1" as StageKey,
     pin: "",
     pinConfirm: "",
     progressNote: "",
@@ -46,7 +52,8 @@ export function AddStudentModal({ open, onOpenChange }: Props) {
       reset();
       onOpenChange(false);
     },
-    onError: (e: Error) => toast.error(e.message || "저장 중 문제가 발생했습니다. 다시 시도해주세요."),
+    onError: (e: Error) =>
+      toast.error(e.message || "저장 중 문제가 발생했습니다. 다시 시도해주세요."),
   });
 
   function reset() {
@@ -54,7 +61,7 @@ export function AddStudentModal({ open, onOpenChange }: Props) {
       name: "",
       academicYear: "",
       department: "",
-      currentStage: "1",
+      representativeStage: "1",
       pin: "",
       pinConfirm: "",
       progressNote: "",
@@ -119,10 +126,10 @@ export function AddStudentModal({ open, onOpenChange }: Props) {
               />
             </Field>
           </div>
-          <Field label="현재 단계" error={errors["currentStage"]}>
+          <Field label="대표 단계">
             <Select
-              value={form.currentStage}
-              onValueChange={(v) => setForm({ ...form, currentStage: v as StageKey })}
+              value={form.representativeStage}
+              onValueChange={(v) => setForm({ ...form, representativeStage: v as StageKey })}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -130,7 +137,7 @@ export function AddStudentModal({ open, onOpenChange }: Props) {
               <SelectContent>
                 {STAGE_KEYS.map((k) => (
                   <SelectItem key={k} value={k}>
-                    Stage {k}
+                    Stage {k} — {STAGES.find((s) => s.key === k)?.title}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -196,7 +203,7 @@ function Field({
 }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-xs font-medium text-muted-foreground">{label}</Label>
+      <Label className="text-sm font-medium text-muted-foreground">{label}</Label>
       {children}
       {error && <p className="text-xs text-destructive">{error}</p>}
     </div>

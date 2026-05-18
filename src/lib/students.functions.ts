@@ -7,6 +7,7 @@ import {
   deleteStudentSchema,
 } from "./schemas";
 import { hashPin, verifyPin } from "./pin";
+import { DEFAULT_STAGE_STATUSES } from "./stages";
 
 async function loadPin(id: string): Promise<string | null> {
   const { data, error } = await supabaseAdmin
@@ -21,16 +22,21 @@ async function loadPin(id: string): Promise<string | null> {
 export const createStudent = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => createStudentSchema.parse(input))
   .handler(async ({ data }) => {
-    const { error } = await supabaseAdmin.from("students").insert({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const row: Record<string, any> = {
       name: data.name,
       academic_year: data.academicYear,
       department: data.department?.trim() ? data.department.trim() : null,
-      current_stage: data.currentStage,
+      current_stage: data.representativeStage,
       completed_stages: [],
       checklist_items: {},
+      stage_statuses: DEFAULT_STAGE_STATUSES,
+      representative_stage: data.representativeStage,
+      notes_by_stage: {},
       progress_note: data.progressNote ?? "",
       pin_code: hashPin(data.pin),
-    });
+    };
+    const { error } = await supabaseAdmin.from("students").insert(row);
     if (error) throw new Error(error.message);
     return { ok: true as const };
   });
@@ -51,16 +57,8 @@ export const updateStudent = createServerFn({ method: "POST" })
       throw new Error("PIN이 올바르지 않습니다.");
     }
     const patch = data.patch;
-    const row: {
-      last_updated_at: string;
-      name?: string;
-      academic_year?: string;
-      department?: string | null;
-      current_stage?: string;
-      completed_stages?: string[];
-      checklist_items?: Record<string, Record<string, boolean>>;
-      progress_note?: string;
-    } = { last_updated_at: new Date().toISOString() };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const row: Record<string, any> = { last_updated_at: new Date().toISOString() };
     if (patch.name !== undefined) row.name = patch.name;
     if (patch.academicYear !== undefined) row.academic_year = patch.academicYear;
     if (patch.department !== undefined) {
@@ -69,9 +67,14 @@ export const updateStudent = createServerFn({ method: "POST" })
     if (patch.currentStage !== undefined) row.current_stage = patch.currentStage;
     if (patch.completedStages !== undefined) row.completed_stages = patch.completedStages;
     if (patch.checklistItems !== undefined) row.checklist_items = patch.checklistItems;
+    if (patch.stageStatuses !== undefined) row.stage_statuses = patch.stageStatuses;
+    if (patch.representativeStage !== undefined)
+      row.representative_stage = patch.representativeStage;
+    if (patch.notesByStage !== undefined) row.notes_by_stage = patch.notesByStage;
     if (patch.progressNote !== undefined) row.progress_note = patch.progressNote;
 
-    const { error } = await supabaseAdmin.from("students").update(row).eq("id", data.id);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabaseAdmin.from("students") as any).update(row).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true as const };
   });

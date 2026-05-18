@@ -1,7 +1,10 @@
-// Single source of truth for all progress stages and their checklists.
-// Add a stage here and every UI surface updates automatically.
-
 export type StageKey = "1" | "1.5" | "2" | "2.5" | "3" | "3.5" | "4";
+
+export type StageStatus = "미시작" | "진행 중" | "부분 달성" | "달성";
+
+export const STAGE_STATUS_OPTIONS: StageStatus[] = ["미시작", "진행 중", "부분 달성", "달성"];
+
+export type StageStatuses = Record<StageKey, StageStatus>;
 
 export interface ChecklistItem {
   key: string;
@@ -11,16 +14,20 @@ export interface ChecklistItem {
 export interface Stage {
   key: StageKey;
   title: string;
-  description: string;
+  fullDescription: string;
+  shortDescription: string;
+  criteria: string;
   checklist: ChecklistItem[];
 }
 
 export const STAGES: Stage[] = [
   {
     key: "1",
-    title: "Stage 1 · Python 기초",
-    description:
-      "Python 기본 문법을 이해하고 150줄 이내의 간단한 프로그램을 작성·해석할 수 있습니다. (Python Express, 클래스까지)",
+    title: "Python 기초",
+    fullDescription:
+      "파이썬 기본 문법을 알고, 150줄 미만의 간단한 예제를 편하게 작성하고 실행 결과를 예측할 수 있는 단계.",
+    shortDescription: "Python 기본 문법, 150줄 이내 프로그램 작성 및 실행 결과 예측",
+    criteria: "Python Express 책 기준 클래스까지.",
     checklist: [
       { key: "py_vars", label: "Python 변수와 자료형" },
       { key: "py_control", label: "조건문과 반복문" },
@@ -33,9 +40,11 @@ export const STAGES: Stage[] = [
   },
   {
     key: "1.5",
-    title: "Stage 1.5 · C 언어",
-    description:
-      "함수, 2차원 배열, 구조체, 파일 입출력, 포인터, call by value/reference를 이해하고 150줄 이내 C 프로그램을 작성·해석할 수 있습니다.",
+    title: "C 언어",
+    fullDescription:
+      "C언어를 배운 학생의 경우, 함수, 2차원 배열, 구조체, 파일입출력, 포인터, Call by value, Call by reference를 이해하고 활용할 수 있는 단계.",
+    shortDescription: "C 언어: 함수, 배열, 구조체, 포인터, call by value/reference 이해",
+    criteria: "C언어 Express 책 기준 구조체, 포인터, 파일입출력까지.",
     checklist: [
       { key: "c_func", label: "C 함수" },
       { key: "c_2d_array", label: "2차원 배열" },
@@ -49,9 +58,11 @@ export const STAGES: Stage[] = [
   },
   {
     key: "2",
-    title: "Stage 2 · 외부 기기에서 실행",
-    description:
-      "개인 PC가 아닌 다른 기기(예: Raspberry Pi)에서 C 또는 Python 프로그램을 실행할 수 있습니다.",
+    title: "외부 기기 실행",
+    fullDescription:
+      "개인 컴퓨터가 아닌 다른 기계에서 C언어 또는 파이썬 프로그램을 실행할 수 있는 단계.",
+    shortDescription: "Raspberry Pi 등 외부 기기에서 C/Python 프로그램 실행",
+    criteria: "예시: 라즈베리 파이 활용.",
     checklist: [
       { key: "rpi_connect", label: "Raspberry Pi 등 기기에 접속 가능" },
       { key: "rpi_run", label: "기기에서 Python/C 프로그램 실행 가능" },
@@ -61,8 +72,10 @@ export const STAGES: Stage[] = [
   },
   {
     key: "2.5",
-    title: "Stage 2.5 · 비 Windows OS",
-    description: "Linux, Raspbian 등 Windows가 아닌 운영체제를 설치하고 사용할 수 있습니다.",
+    title: "비 Windows OS",
+    fullDescription: "윈도우가 아닌 다른 운영체제를 설치하고 사용할 수 있는 단계.",
+    shortDescription: "Linux, Raspbian 등 비 Windows OS 설치 및 활용",
+    criteria: "예시: Linux, Raspbian, 다른 Linux 배포판.",
     checklist: [
       { key: "os_install", label: "Linux 또는 Raspbian 설치 가능" },
       { key: "os_terminal", label: "기본 Linux 터미널 명령어 사용" },
@@ -73,9 +86,11 @@ export const STAGES: Stage[] = [
   },
   {
     key: "3",
-    title: "Stage 3 · 자료구조와 알고리즘",
-    description:
-      "스택, 큐, 트리 등 기본 자료구조와 정렬·탐색을 이해하고 재귀와 동적 계획법으로 간단한 문제를 해결할 수 있습니다.",
+    title: "자료구조와 알고리즘",
+    fullDescription:
+      "자료구조의 기본 개념을 이해하고, 스택, 큐, 트리 등의 필요성을 설명할 수 있는 단계. 정렬, 탐색의 기본을 알고, 재귀함수와 DP로 간단한 알고리즘 문제를 정의하고 풀 수 있는 단계.",
+    shortDescription: "자료구조(스택/큐/트리), 정렬/탐색, 재귀/DP 기초",
+    criteria: "정렬, 탐색, 재귀, DP 기본 문제 해결.",
     checklist: [
       { key: "ds_stack", label: "스택" },
       { key: "ds_queue", label: "큐" },
@@ -89,8 +104,10 @@ export const STAGES: Stage[] = [
   },
   {
     key: "3.5",
-    title: "Stage 3.5 · 알고리즘 문제 풀이",
-    description: "쉬운 난이도라도 최소 100문제 이상의 알고리즘 문제를 해결한 경험이 있습니다.",
+    title: "알고리즘 문제 풀이",
+    fullDescription: "쉬운 난이도라도 알고리즘 문제를 100개 이상 풀어본 경험이 있는 단계.",
+    shortDescription: "알고리즘 문제 100문제 이상 풀이 경험",
+    criteria: "쉬운 난이도 기준 100문제 이상.",
     checklist: [
       { key: "ps_25", label: "25문제 풀이" },
       { key: "ps_50", label: "50문제 풀이" },
@@ -101,8 +118,11 @@ export const STAGES: Stage[] = [
   },
   {
     key: "4",
-    title: "Stage 4 · 국내 학회 발표",
-    description: "2페이지 분량의 국내 학회 논문을 작성하고 최소 포스터 발표 경험이 있습니다.",
+    title: "국내 학회 발표",
+    fullDescription:
+      "2장 분량의 국내 학술대회 논문을 작성하고, 최소 포스터 발표를 해본 경험이 있는 단계.",
+    shortDescription: "국내 학술대회 논문 작성 및 포스터 발표 경험",
+    criteria: "2페이지 논문 작성 + 포스터 발표.",
     checklist: [
       { key: "paper_topic", label: "연구 주제 선정" },
       { key: "paper_read", label: "관련 논문 읽기" },
@@ -123,17 +143,33 @@ export const STAGE_MAP: Record<StageKey, Stage> = STAGES.reduce(
 
 export const STAGE_KEYS: StageKey[] = STAGES.map((s) => s.key);
 
-/**
- * Total checklist item count across all stages.
- */
-export const TOTAL_CHECKLIST_ITEMS = STAGES.reduce(
-  (sum, s) => sum + s.checklist.length,
-  0,
-);
+export const STAGE_ORDER: Record<StageKey, number> = {
+  "1": 0,
+  "1.5": 1,
+  "2": 2,
+  "2.5": 3,
+  "3": 4,
+  "3.5": 5,
+  "4": 6,
+};
+
+export const TOTAL_CHECKLIST_ITEMS = STAGES.reduce((sum, s) => sum + s.checklist.length, 0);
+
+export const DEFAULT_STAGE_STATUSES: StageStatuses = {
+  "1": "미시작",
+  "1.5": "미시작",
+  "2": "미시작",
+  "2.5": "미시작",
+  "3": "미시작",
+  "3.5": "미시작",
+  "4": "미시작",
+};
+
+// ─── Progress calculation from checklists ───
 
 export type ChecklistState = Partial<Record<StageKey, Record<string, boolean>>>;
 
-export function countCompletedItems(checklist: ChecklistState): number {
+export function countCompletedChecklistItems(checklist: ChecklistState): number {
   let n = 0;
   for (const stage of STAGES) {
     const stageState = checklist[stage.key] ?? {};
@@ -144,7 +180,7 @@ export function countCompletedItems(checklist: ChecklistState): number {
   return n;
 }
 
-export function stageCompletion(
+export function stageChecklistCompletion(
   checklist: ChecklistState,
   stageKey: StageKey,
 ): { done: number; total: number } {
@@ -154,11 +190,56 @@ export function stageCompletion(
   return { done, total: stage.checklist.length };
 }
 
-export function overallProgress(checklist: ChecklistState): number {
-  if (TOTAL_CHECKLIST_ITEMS === 0) return 0;
-  return Math.round((countCompletedItems(checklist) / TOTAL_CHECKLIST_ITEMS) * 100);
+// ─── Progress calculation from statuses ───
+
+const STATUS_WEIGHT: Record<StageStatus, number> = {
+  미시작: 0,
+  "진행 중": 0.25,
+  "부분 달성": 0.6,
+  달성: 1,
+};
+
+export function overallProgress(stageStatuses: StageStatuses, checklist: ChecklistState): number {
+  let score = 0;
+  const total = STAGES.length;
+  for (const stage of STAGES) {
+    const status = stageStatuses[stage.key] ?? "미시작";
+    const checklistW = stageChecklistCompletion(checklist, stage.key);
+    const checklistPct = checklistW.total > 0 ? checklistW.done / checklistW.total : 0;
+    const base = STATUS_WEIGHT[status];
+    // Blend: 70% status weight + 30% checklist completion within that status
+    const blended = base * 0.7 + checklistPct * STATUS_WEIGHT["달성"] * 0.3;
+    score += blended;
+  }
+  return Math.round((score / total) * 100);
+}
+
+export function stageCompletion(
+  stageStatuses: StageStatuses,
+  checklist: ChecklistState,
+  stageKey: StageKey,
+): { done: number; total: number; status: StageStatus } {
+  const stage = STAGE_MAP[stageKey];
+  const state = checklist[stageKey] ?? {};
+  const done = stage.checklist.filter((i) => state[i.key]).length;
+  return {
+    done,
+    total: stage.checklist.length,
+    status: stageStatuses[stageKey] ?? "미시작",
+  };
+}
+
+export function countByStatus(stageStatuses: StageStatuses, status: StageStatus): number {
+  let n = 0;
+  for (const key of STAGE_KEYS) {
+    if ((stageStatuses[key] ?? "미시작") === status) n++;
+  }
+  return n;
 }
 
 export function isStageKey(v: string): v is StageKey {
   return (STAGE_KEYS as string[]).includes(v);
 }
+
+// Convenience: export old helpers for backward compat during transition
+export const countCompletedItems = countCompletedChecklistItems;

@@ -7,6 +7,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { DashboardStats } from "@/components/DashboardStats";
 import { FilterBar } from "@/components/FilterBar";
+import { StageCriteriaReference } from "@/components/StageCriteriaReference";
 import { StudentTable, StudentCard } from "@/components/StudentList";
 import { AddStudentModal } from "@/components/AddStudentModal";
 import { EditFlow } from "@/components/EditFlow";
@@ -15,11 +16,10 @@ import type { Student } from "@/lib/types";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "전체 현황 · Lab Progress Board" },
+      { title: "inc lab" },
       {
         name: "description",
-        content:
-          "학부연구생의 현재 학습 단계와 진행률을 한눈에 확인할 수 있는 연구실 내부 공유 보드.",
+        content: "inc lab 소속 학부연구생 progress tracker",
       },
     ],
   }),
@@ -33,6 +33,8 @@ function Dashboard() {
   const [search, setSearch] = useState("");
   const [year, setYear] = useState("");
   const [stage, setStage] = useState("");
+  const [paperFilter, setPaperFilter] = useState("__all__");
+  const [algoFilter, setAlgoFilter] = useState("__all__");
 
   const { data: students = [], isLoading } = useQuery({
     queryKey: ["students"],
@@ -40,7 +42,10 @@ function Dashboard() {
   });
 
   const years = useMemo(
-    () => Array.from(new Set(students.map((s) => s.academicYear).filter(Boolean))).sort().reverse(),
+    () =>
+      Array.from(new Set(students.map((s) => s.academicYear).filter(Boolean)))
+        .sort()
+        .reverse(),
     [students],
   );
 
@@ -48,33 +53,52 @@ function Dashboard() {
     const q = search.trim().toLowerCase();
     return students.filter((s) => {
       if (year && s.academicYear !== year) return false;
-      if (stage && s.currentStage !== stage) return false;
+      if (stage && s.representativeStage !== stage) return false;
+      if (
+        paperFilter === "yes" &&
+        !["달성", "부분 달성"].includes(s.stageStatuses["4"] ?? "미시작")
+      )
+        return false;
+      if (
+        paperFilter === "no" &&
+        ["달성", "부분 달성"].includes(s.stageStatuses["4"] ?? "미시작")
+      )
+        return false;
+      if (
+        algoFilter === "yes" &&
+        !["달성", "부분 달성"].includes(s.stageStatuses["3.5"] ?? "미시작")
+      )
+        return false;
+      if (
+        algoFilter === "no" &&
+        ["달성", "부분 달성"].includes(s.stageStatuses["3.5"] ?? "미시작")
+      )
+        return false;
       if (!q) return true;
       return (
         s.name.toLowerCase().includes(q) ||
         (s.department ?? "").toLowerCase().includes(q)
       );
     });
-  }, [students, search, year, stage]);
+  }, [students, search, year, stage, paperFilter, algoFilter]);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
+    <main className="mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-8">
       <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-          학부연구생 Progress Board
+        <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+          inc lab · 학부연구생
         </h1>
         <p className="text-sm text-muted-foreground">
-          Undergraduate Research Assistant Learning Progress
-        </p>
-        <p className="max-w-3xl text-sm text-muted-foreground">
-          학부연구생의 현재 학습 단계와 연구실 적응 Progress를 한눈에 확인하기 위한 내부 공유 보드입니다.
+          inc lab 소속 학부연구생들의 학습 진행 상황을 공유하는 보드입니다.
         </p>
       </div>
 
       <div className="mt-6 space-y-5">
         <DashboardStats students={students} />
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <StageCriteriaReference />
+
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <div className="flex-1">
             <FilterBar
               search={search}
@@ -84,9 +108,17 @@ function Dashboard() {
               stage={stage}
               onStageChange={setStage}
               years={years}
+              paperFilter={paperFilter}
+              onPaperFilterChange={setPaperFilter}
+              algoFilter={algoFilter}
+              onAlgoFilterChange={setAlgoFilter}
             />
           </div>
-          <Button onClick={() => setAddOpen(true)} className="self-stretch sm:self-auto">
+          <Button
+            onClick={() => setAddOpen(true)}
+            size="sm"
+            className="h-9 text-sm shrink-0"
+          >
             <Plus className="h-4 w-4" />
             학생 추가
           </Button>
@@ -97,11 +129,13 @@ function Dashboard() {
             불러오는 중...
           </div>
         ) : students.length === 0 ? (
-          <div className="rounded-lg border border-dashed bg-card px-4 py-14 text-center">
-            <p className="text-sm text-muted-foreground">아직 등록된 학부연구생이 없습니다.</p>
-            <Button className="mt-4" onClick={() => setAddOpen(true)}>
+          <div className="rounded-lg border bg-card px-4 py-14 text-center">
+            <p className="text-sm text-muted-foreground">
+              아직 등록된 학부연구생이 없습니다.
+            </p>
+            <Button className="mt-3" size="sm" onClick={() => setAddOpen(true)}>
               <Plus className="h-4 w-4" />
-              첫 번째 학생 추가하기
+              학생 등록
             </Button>
           </div>
         ) : filtered.length === 0 ? (

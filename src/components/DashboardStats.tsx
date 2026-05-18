@@ -1,16 +1,17 @@
 import type { Student } from "@/lib/types";
-import { overallProgress, countCompletedItems, TOTAL_CHECKLIST_ITEMS } from "@/lib/stages";
+import { overallProgress } from "@/lib/stages";
 
 interface Props {
   students: Student[];
 }
 
-function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
+function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border bg-card px-4 py-3">
-      <p className="text-xs font-medium text-muted-foreground">{label}</p>
-      <p className="mt-1 text-2xl font-semibold tabular-nums text-foreground">{value}</p>
-      {hint && <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>}
+    <div className="flex items-baseline gap-2 rounded-md border px-3 py-2 min-w-0">
+      <span className="text-sm text-muted-foreground shrink-0">{label}</span>
+      <span className="text-base font-semibold tabular-nums text-foreground truncate">
+        {value}
+      </span>
     </div>
   );
 }
@@ -20,19 +21,27 @@ export function DashboardStats({ students }: Props) {
   const avg =
     total === 0
       ? 0
-      : Math.round(students.reduce((s, st) => s + overallProgress(st.checklistItems), 0) / total);
-  const stage3plus = students.filter((s) => parseFloat(s.currentStage) >= 3).length;
-  const stage4 = students.filter((s) => s.currentStage === "4").length;
+      : Math.round(
+          students.reduce(
+            (s, st) => s + overallProgress(st.stageStatuses, st.checklistItems),
+            0,
+          ) / total,
+        );
+  const stage3plus = students.filter(
+    (s) =>
+      ["달성", "부분 달성", "진행 중"].includes(s.stageStatuses["3"] ?? "미시작") ||
+      ["달성", "부분 달성", "진행 중"].includes(s.stageStatuses["3.5"] ?? "미시작"),
+  ).length;
+  const paperExp = students.filter((s) =>
+    ["달성", "부분 달성"].includes(s.stageStatuses["4"] ?? "미시작"),
+  ).length;
 
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-      <Stat label="전체 학부연구생 수" value={`${total}`} hint="명" />
-      <Stat label="평균 진행률" value={`${avg}%`} hint={`총 ${TOTAL_CHECKLIST_ITEMS}개 항목 기준`} />
-      <Stat label="Stage 3 이상" value={`${stage3plus}`} hint="명" />
-      <Stat label="Stage 4 달성" value={`${stage4}`} hint="명" />
+    <div className="flex flex-wrap gap-2">
+      <Stat label="전체 인원" value={`${total}명`} />
+      <Stat label="평균 진행률" value={`${avg}%`} />
+      <Stat label="Stage 3+ 역량" value={`${stage3plus}명`} />
+      <Stat label="논문/포스터 경험" value={`${paperExp}명`} />
     </div>
   );
 }
-
-// re-export so tree-shaking on dashboard is simple
-export { countCompletedItems };
