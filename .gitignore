@@ -20,8 +20,9 @@ dist-ssr
 .wrangler/
 .dev.vars
 
-# Secrets (do not commit API keys)
+# Secrets (do not commit API keys / keys)
 .env
+*.pem
 
 # Editor directories and files
 .vscode/*
