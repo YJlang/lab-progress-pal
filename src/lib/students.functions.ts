@@ -51,9 +51,16 @@ export const updateStudent = createServerFn({ method: "POST" })
       throw new Error("PIN이 올바르지 않습니다.");
     }
     const patch = data.patch;
-    const row: Record<string, unknown> = {
-      last_updated_at: new Date().toISOString(),
-    };
+    const row: {
+      last_updated_at: string;
+      name?: string;
+      academic_year?: string;
+      department?: string | null;
+      current_stage?: string;
+      completed_stages?: string[];
+      checklist_items?: Record<string, Record<string, boolean>>;
+      progress_note?: string;
+    } = { last_updated_at: new Date().toISOString() };
     if (patch.name !== undefined) row.name = patch.name;
     if (patch.academicYear !== undefined) row.academic_year = patch.academicYear;
     if (patch.department !== undefined) {
