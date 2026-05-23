@@ -14,8 +14,8 @@ import { overallProgress } from "@/lib/stages";
 export const Route = createFileRoute("/students/$id")({
   head: () => ({
     meta: [
-      { title: "학생 상세 · inc lab" },
-      { name: "description", content: "inc lab 학부연구생 상세 progress" },
+      { title: "학생 상세 · INC Lab" },
+      { name: "description", content: "INC Lab 학부연구생 상세 progress" },
     ],
   }),
   component: StudentDetail,

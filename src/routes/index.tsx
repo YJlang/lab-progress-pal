@@ -16,10 +16,10 @@ import type { Student } from "@/lib/types";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "inc lab" },
+      { title: "INC Lab" },
       {
         name: "description",
-        content: "inc lab 소속 학부연구생 progress tracker",
+        content: "INC Lab 소속 학부연구생 progress tracker",
       },
     ],
   }),
@@ -86,10 +86,10 @@ function Dashboard() {
     <main className="mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-8">
       <div className="space-y-1">
         <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-          inc lab · 학부연구생
+          INC Lab · 학부연구생
         </h1>
         <p className="text-sm text-muted-foreground">
-          inc lab 소속 학부연구생들의 학습 진행 상황을 공유하는 보드입니다.
+          INC Lab 소속 학부연구생들의 학습 진행 상황을 공유하는 보드입니다.
         </p>
       </div>
 

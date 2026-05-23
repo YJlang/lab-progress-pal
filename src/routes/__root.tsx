@@ -91,13 +91,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "inc lab" },
+      { title: "INC Lab" },
       {
         name: "description",
-        content: "inc lab 소속 학부연구생 progress tracker",
+        content: "INC Lab 소속 학부연구생 progress tracker",
       },
-      { property: "og:title", content: "inc lab" },
-      { property: "og:description", content: "inc lab 소속 학부연구생 progress tracker" },
+      { property: "og:title", content: "INC Lab" },
+      { property: "og:description", content: "INC Lab 소속 학부연구생 progress tracker" },
       { property: "og:type", content: "website" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
@@ -138,10 +138,10 @@ function RootComponent() {
           <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-2.5 sm:px-6">
             <Link to="/" className="flex items-baseline gap-2 min-w-0">
               <span className="text-base font-semibold tracking-tight text-foreground truncate">
-                inc lab
+                INC Lab
               </span>
               <span className="hidden text-sm text-muted-foreground sm:inline shrink-0">
-                inc lab 학부연구생
+                INC Lab 학부연구생
               </span>
             </Link>
             <button
