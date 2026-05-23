@@ -59,26 +59,17 @@ function Dashboard() {
         !["달성", "부분 달성"].includes(s.stageStatuses["4"] ?? "미시작")
       )
         return false;
-      if (
-        paperFilter === "no" &&
-        ["달성", "부분 달성"].includes(s.stageStatuses["4"] ?? "미시작")
-      )
+      if (paperFilter === "no" && ["달성", "부분 달성"].includes(s.stageStatuses["4"] ?? "미시작"))
         return false;
       if (
         algoFilter === "yes" &&
         !["달성", "부분 달성"].includes(s.stageStatuses["3.5"] ?? "미시작")
       )
         return false;
-      if (
-        algoFilter === "no" &&
-        ["달성", "부분 달성"].includes(s.stageStatuses["3.5"] ?? "미시작")
-      )
+      if (algoFilter === "no" && ["달성", "부분 달성"].includes(s.stageStatuses["3.5"] ?? "미시작"))
         return false;
       if (!q) return true;
-      return (
-        s.name.toLowerCase().includes(q) ||
-        (s.department ?? "").toLowerCase().includes(q)
-      );
+      return s.name.toLowerCase().includes(q) || (s.department ?? "").toLowerCase().includes(q);
     });
   }, [students, search, year, stage, paperFilter, algoFilter]);
 
@@ -114,11 +105,7 @@ function Dashboard() {
               onAlgoFilterChange={setAlgoFilter}
             />
           </div>
-          <Button
-            onClick={() => setAddOpen(true)}
-            size="sm"
-            className="h-9 text-sm shrink-0"
-          >
+          <Button onClick={() => setAddOpen(true)} size="sm" className="h-9 text-sm shrink-0">
             <Plus className="h-4 w-4" />
             학생 추가
           </Button>
@@ -130,9 +117,7 @@ function Dashboard() {
           </div>
         ) : students.length === 0 ? (
           <div className="rounded-lg border bg-card px-4 py-14 text-center">
-            <p className="text-sm text-muted-foreground">
-              아직 등록된 학부연구생이 없습니다.
-            </p>
+            <p className="text-sm text-muted-foreground">아직 등록된 학부연구생이 없습니다.</p>
             <Button className="mt-3" size="sm" onClick={() => setAddOpen(true)}>
               <Plus className="h-4 w-4" />
               학생 등록

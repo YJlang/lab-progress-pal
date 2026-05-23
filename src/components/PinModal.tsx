@@ -63,7 +63,8 @@ export function PinModal({ open, studentId, studentName, onCancel, onVerified }:
         <DialogHeader>
           <DialogTitle>PIN 입력</DialogTitle>
           <DialogDescription>
-            <span className="font-medium text-foreground">{studentName}</span> 정보를 수정하려면 4자리 PIN을 입력해주세요.
+            <span className="font-medium text-foreground">{studentName}</span> 정보를 수정하려면
+            4자리 PIN을 입력해주세요.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-3">

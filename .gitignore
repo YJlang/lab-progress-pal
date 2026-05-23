@@ -22,6 +22,7 @@ dist-ssr
 
 # Secrets (do not commit API keys / keys)
 .env
+.env.local
 *.pem
 
 # Editor directories and files

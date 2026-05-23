@@ -43,13 +43,7 @@ export function StageBadge({
   );
 }
 
-export function StageStatusIndicator({
-  stage,
-  status,
-}: {
-  stage: StageKey;
-  status: StageStatus;
-}) {
+export function StageStatusIndicator({ stage, status }: { stage: StageKey; status: StageStatus }) {
   return (
     <span
       className="inline-flex items-center gap-1 text-xs tabular-nums shrink-0"

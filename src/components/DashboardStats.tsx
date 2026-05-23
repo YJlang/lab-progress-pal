@@ -9,9 +9,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-baseline gap-2 rounded-md border px-3 py-2 min-w-0">
       <span className="text-sm text-muted-foreground shrink-0">{label}</span>
-      <span className="text-base font-semibold tabular-nums text-foreground truncate">
-        {value}
-      </span>
+      <span className="text-base font-semibold tabular-nums text-foreground truncate">{value}</span>
     </div>
   );
 }
@@ -22,10 +20,8 @@ export function DashboardStats({ students }: Props) {
     total === 0
       ? 0
       : Math.round(
-          students.reduce(
-            (s, st) => s + overallProgress(st.stageStatuses, st.checklistItems),
-            0,
-          ) / total,
+          students.reduce((s, st) => s + overallProgress(st.stageStatuses, st.checklistItems), 0) /
+            total,
         );
   const stage3plus = students.filter(
     (s) =>

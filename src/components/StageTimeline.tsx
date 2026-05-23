@@ -35,9 +35,7 @@ export function ProgressMap({ stageStatuses, checklist, notesByStage }: Props) {
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0">
                 <StageBadge stage={stage.key} size="xs" />
-                <span className="text-sm font-medium text-foreground truncate">
-                  {stage.title}
-                </span>
+                <span className="text-sm font-medium text-foreground truncate">{stage.title}</span>
               </div>
               <StageStatusIndicator stage={stage.key} status={status} />
             </div>
@@ -82,9 +80,7 @@ export function ProgressMap({ stageStatuses, checklist, notesByStage }: Props) {
                 </ul>
               </div>
             )}
-            {note && (
-              <p className="mt-2 text-xs text-muted-foreground/70 border-t pt-2">{note}</p>
-            )}
+            {note && <p className="mt-2 text-xs text-muted-foreground/70 border-t pt-2">{note}</p>}
           </div>
         );
       })}

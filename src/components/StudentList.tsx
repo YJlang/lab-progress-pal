@@ -28,22 +28,12 @@ export function StudentTable({
         <thead className="border-b bg-muted/30 text-xs text-muted-foreground">
           <tr>
             <th className="px-3 py-2.5 text-left font-medium">이름</th>
-            <th className="px-3 py-2.5 text-left font-medium hidden sm:table-cell">
-              학년도
-            </th>
-            <th className="px-3 py-2.5 text-left font-medium hidden md:table-cell">
-              학과
-            </th>
+            <th className="px-3 py-2.5 text-left font-medium hidden sm:table-cell">학년도</th>
+            <th className="px-3 py-2.5 text-left font-medium hidden md:table-cell">학과</th>
             <th className="px-3 py-2.5 text-left font-medium">대표 단계</th>
-            <th className="px-3 py-2.5 text-left font-medium hidden lg:table-cell">
-              진행률
-            </th>
-            <th className="px-3 py-2.5 text-left font-medium hidden xl:table-cell">
-              단계 현황
-            </th>
-            <th className="px-3 py-2.5 text-left font-medium hidden lg:table-cell">
-              수정일
-            </th>
+            <th className="px-3 py-2.5 text-left font-medium hidden lg:table-cell">진행률</th>
+            <th className="px-3 py-2.5 text-left font-medium hidden xl:table-cell">단계 현황</th>
+            <th className="px-3 py-2.5 text-left font-medium hidden lg:table-cell">수정일</th>
           </tr>
         </thead>
         <tbody className="divide-y">
@@ -153,9 +143,7 @@ export function StudentCard({ student, onEdit }: RowProps) {
       </div>
       <div className="mt-3">
         <ProgressBar value={pct} />
-        <span className="mt-1 block text-xs tabular-nums text-muted-foreground">
-          {pct}%
-        </span>
+        <span className="mt-1 block text-xs tabular-nums text-muted-foreground">{pct}%</span>
       </div>
       <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
         {compactStatuses.map((k) => {
@@ -174,9 +162,7 @@ export function StudentCard({ student, onEdit }: RowProps) {
         })}
       </div>
       <div className="mt-3 flex items-center justify-between">
-        <span className="text-xs text-muted-foreground">
-          {formatDate(student.lastUpdatedAt)}
-        </span>
+        <span className="text-xs text-muted-foreground">{formatDate(student.lastUpdatedAt)}</span>
         <Link
           to="/students/$id"
           params={{ id: student.id }}

@@ -26,11 +26,11 @@ icacls .\likelionSKU.pem /remove "Users" "Authenticated Users" "Everyone" "BUILT
 
 ## 서비스 구조
 
-| 서비스 | 서버 경로 | 실행 방식 | 내부 포트 | 외부 URL |
-| --- | --- | --- | --- | --- |
-| 백엔드 jar | `/home/ubuntu/backend` | `java -jar` + `nohup` | `8083` | `http://backend.sku-sku.com/` |
-| lab-progress-pal | `/home/ubuntu/lab-progress-pal` | `bun run dev` + `nohup` | `8085` | `http://13.124.62.85/` |
-| Docker 서비스 | Docker compose/container | Docker | `8088`, `3307`, `6380` | `http://final.sku-sku.com/` 등 |
+| 서비스           | 서버 경로                       | 실행 방식               | 내부 포트              | 외부 URL                       |
+| ---------------- | ------------------------------- | ----------------------- | ---------------------- | ------------------------------ |
+| 백엔드 jar       | `/home/ubuntu/backend`          | `java -jar` + `nohup`   | `8083`                 | `http://backend.sku-sku.com/`  |
+| lab-progress-pal | `/home/ubuntu/lab-progress-pal` | `bun run dev` + `nohup` | `8085`                 | `http://13.124.62.85/`         |
+| Docker 서비스    | Docker compose/container        | Docker                  | `8088`, `3307`, `6380` | `http://final.sku-sku.com/` 등 |
 
 nginx는 다음처럼 프록시합니다.
 
@@ -139,4 +139,3 @@ cd ~/lab-progress-pal
 cp nohup.out "nohup.out.$(date +%Y%m%d-%H%M%S).bak"
 : > nohup.out
 ```
-

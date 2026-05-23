@@ -100,9 +100,7 @@ function StudentDetail() {
 
       <section className="mt-6">
         <div className="flex items-baseline justify-between gap-2">
-          <h2 className="text-base font-semibold tracking-tight text-foreground">
-            Progress 기록
-          </h2>
+          <h2 className="text-base font-semibold tracking-tight text-foreground">Progress 기록</h2>
           <span className="text-xs text-muted-foreground">
             단계는 순서와 무관하게 독립적으로 기록됩니다
           </span>
@@ -128,10 +126,7 @@ function StudentDetail() {
         </div>
       </section>
 
-      <EditFlow
-        student={editOpen ? student : null}
-        onClose={() => setEditOpen(false)}
-      />
+      <EditFlow student={editOpen ? student : null} onClose={() => setEditOpen(false)} />
     </main>
   );
 }

@@ -63,9 +63,7 @@ export function StageCriteriaReference() {
                   <p className="text-sm leading-relaxed text-muted-foreground">
                     {stage.fullDescription}
                   </p>
-                  <p className="mt-1 text-sm text-muted-foreground/70">
-                    기준: {stage.criteria}
-                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground/70">기준: {stage.criteria}</p>
                 </div>
               )}
             </div>

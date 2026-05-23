@@ -46,9 +46,7 @@ export function ChecklistSection({ state, onChange, readOnly, stageKey }: Props)
                     <label
                       htmlFor={id}
                       className={`text-sm ${
-                        checked
-                          ? "text-muted-foreground/50 line-through"
-                          : "text-foreground"
+                        checked ? "text-muted-foreground/50 line-through" : "text-foreground"
                       } ${readOnly ? "" : "cursor-pointer"}`}
                     >
                       {item.label}
