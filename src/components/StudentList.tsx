@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { Student } from "@/lib/types";
-import { overallProgress } from "@/lib/stages";
+import { overallProgress, STAGE_KEYS } from "@/lib/stages";
 import { StageBadge } from "./StageBadge";
 import { ProgressBar } from "./ProgressBar";
 
@@ -49,7 +49,7 @@ export function StudentTable({
 function TableRow({ student, onEdit }: RowProps) {
   const pct = overallProgress(student.stageStatuses, student.checklistItems);
 
-  const compactStatuses = ["1", "1.5", "2", "2.5", "3", "3.5", "4"] as const;
+  const compactStatuses = STAGE_KEYS;
   const statusLabel: Record<string, string> = {
     미시작: "—",
     "진행 중": "△",
@@ -121,7 +121,7 @@ function TableRow({ student, onEdit }: RowProps) {
 export function StudentCard({ student, onEdit }: RowProps) {
   const pct = overallProgress(student.stageStatuses, student.checklistItems);
 
-  const compactStatuses = ["1", "1.5", "2", "2.5", "3", "3.5", "4"] as const;
+  const compactStatuses = STAGE_KEYS;
 
   return (
     <div className="rounded-lg border bg-card p-4">

@@ -1,4 +1,4 @@
-export type StageKey = "1" | "1.5" | "2" | "2.5" | "3" | "3.5" | "4";
+export type StageKey = "1" | "1.5" | "2" | "2.5" | "3" | "3.5" | "4" | "5" | "6";
 
 export type StageStatus = "미시작" | "진행 중" | "부분 달성" | "달성";
 
@@ -131,6 +131,36 @@ export const STAGES: Stage[] = [
       { key: "paper_present", label: "국내 학회 발표" },
     ],
   },
+  {
+    key: "5",
+    title: "국제 학회 발표",
+    fullDescription:
+      "영문으로 국제 학술대회 논문을 작성하고, 포스터 또는 구두 발표를 통해 해외 연구자들과 교류해본 경험이 있는 단계.",
+    shortDescription: "국제 학술대회 논문 작성 및 영어 발표 경험",
+    criteria: "영문 논문 작성 + 국제 학회 발표 (포스터/구두).",
+    checklist: [
+      { key: "intl_write", label: "영문 논문 작성" },
+      { key: "intl_submit", label: "국제 학회 투고" },
+      { key: "intl_revise", label: "리뷰 응답 및 수정" },
+      { key: "intl_slides", label: "영어 발표 자료 준비" },
+      { key: "intl_present", label: "국제 학회 발표" },
+    ],
+  },
+  {
+    key: "6",
+    title: "SCIE 논문 제출",
+    fullDescription:
+      "SCIE 등재 저널을 선정하여 풀논문을 작성하고, 동료 검토 과정을 거쳐 게재까지 완료해본 경험이 있는 단계.",
+    shortDescription: "SCIE 저널에 풀논문 작성 및 제출 경험",
+    criteria: "SCIE 저널 풀논문 작성 + 제출 + 리뷰 대응.",
+    checklist: [
+      { key: "scie_select", label: "SCIE 저널 선정" },
+      { key: "scie_write", label: "풀논문 작성" },
+      { key: "scie_review", label: "동료 검토 응답" },
+      { key: "scie_accept", label: "게재 승인" },
+      { key: "scie_publish", label: "출판" },
+    ],
+  },
 ];
 
 export const STAGE_MAP: Record<StageKey, Stage> = STAGES.reduce(
@@ -151,6 +181,8 @@ export const STAGE_ORDER: Record<StageKey, number> = {
   "3": 4,
   "3.5": 5,
   "4": 6,
+  "5": 7,
+  "6": 8,
 };
 
 export const TOTAL_CHECKLIST_ITEMS = STAGES.reduce((sum, s) => sum + s.checklist.length, 0);
@@ -163,6 +195,8 @@ export const DEFAULT_STAGE_STATUSES: StageStatuses = {
   "3": "미시작",
   "3.5": "미시작",
   "4": "미시작",
+  "5": "미시작",
+  "6": "미시작",
 };
 
 // ─── Progress calculation from checklists ───

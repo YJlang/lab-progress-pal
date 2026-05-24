@@ -84,6 +84,10 @@
   --stage-3_5-fg: oklch(0.43 0.1 35);
   --stage-4-bg: oklch(0.93 0.035 15);
   --stage-4-fg: oklch(0.43 0.12 20);
+  --stage-5-bg: oklch(0.93 0.04 340);
+  --stage-5-fg: oklch(0.42 0.13 345);
+  --stage-6-bg: oklch(0.93 0.04 300);
+  --stage-6-fg: oklch(0.4 0.13 305);
 }
 
 .dark {

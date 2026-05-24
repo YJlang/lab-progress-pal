@@ -8,6 +8,8 @@ const STAGE_COLORS: Record<StageKey, { bg: string; fg: string }> = {
   "3": { bg: "var(--stage-3-bg)", fg: "var(--stage-3-fg)" },
   "3.5": { bg: "var(--stage-3_5-bg)", fg: "var(--stage-3_5-fg)" },
   "4": { bg: "var(--stage-4-bg)", fg: "var(--stage-4-fg)" },
+  "5": { bg: "var(--stage-5-bg)", fg: "var(--stage-5-fg)" },
+  "6": { bg: "var(--stage-6-bg)", fg: "var(--stage-6-fg)" },
 };
 
 const STATUS_STYLE: Record<StageStatus, string> = {
