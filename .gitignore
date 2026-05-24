@@ -36,6 +36,10 @@ skills-lock.json
 lab-progress-pal.pid
 nohup.out
 
+# Supabase CLI local state (created by `supabase link` / `db pull`)
+supabase/.temp/
+.supabase/
+
 # Misc local files
 image.png
 
