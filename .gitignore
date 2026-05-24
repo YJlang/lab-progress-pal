@@ -25,9 +25,19 @@ dist-ssr
 .env.local
 *.pem
 
-# Claude Code personal/local artifacts (commit agents, skills, .mcp.json only)
-.claude/settings.local.json
-.claude/skills/*/__screenshots__/
+# AI dev tooling — kept local, not part of the service
+.claude/
+.agents/
+.opencode/
+.mcp.json
+skills-lock.json
+
+# Runtime artifacts (only created on the server)
+lab-progress-pal.pid
+nohup.out
+
+# Misc local files
+image.png
 
 # Editor directories and files
 .vscode/*
