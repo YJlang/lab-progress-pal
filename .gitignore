@@ -25,6 +25,10 @@ dist-ssr
 .env.local
 *.pem
 
+# Claude Code personal/local artifacts (commit agents, skills, .mcp.json only)
+.claude/settings.local.json
+.claude/skills/*/__screenshots__/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
