@@ -87,7 +87,10 @@ function shot(chrome, url, outPath) {
 }
 
 function slug(route) {
-  const s = route.replace(/^\/+|\/+$/g, "").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+  const s = route
+    .replace(/^\/+|\/+$/g, "")
+    .replace(/[^a-z0-9]+/gi, "-")
+    .toLowerCase();
   return s || "root";
 }
 
@@ -102,8 +105,14 @@ function killServer() {
   }
 }
 
-process.on("SIGINT", () => { killServer(); process.exit(130); });
-process.on("SIGTERM", () => { killServer(); process.exit(143); });
+process.on("SIGINT", () => {
+  killServer();
+  process.exit(130);
+});
+process.on("SIGTERM", () => {
+  killServer();
+  process.exit(143);
+});
 
 async function main() {
   if (mode === "prod" && !existsSync(join(repoRoot, "dist", "server", "server.js"))) {
@@ -137,5 +146,8 @@ async function main() {
 }
 
 main()
-  .catch((err) => { console.error(err); process.exitCode = 1; })
+  .catch((err) => {
+    console.error(err);
+    process.exitCode = 1;
+  })
   .finally(() => killServer());
