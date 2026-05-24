@@ -51,10 +51,17 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
 
-      - name: Ship dist and runtime to EC2
+      - name: Ship dist, runtime, and dep manifest to EC2
         run: |
-          tar -czf - dist/client dist/server deploy-server.mjs | \
+          tar -czf - dist/client dist/server deploy-server.mjs package.json bun.lock | \
             ssh "$SSH_USER@$SSH_HOST" "cd $REMOTE_DIR && rm -rf dist/client dist/server && tar -xzf -"
+
+      - name: Install/refresh production deps on server
+        # Idempotent: no-op when bun.lock matches what's installed (a few seconds).
+        # When deps change, picks up new packages so the server bundle can import them.
+        run: |
+          ssh "$SSH_USER@$SSH_HOST" \
+            "cd $REMOTE_DIR && ~/.bun/bin/bun install --production --frozen-lockfile"
 
       - name: Restart bun process
         run: |

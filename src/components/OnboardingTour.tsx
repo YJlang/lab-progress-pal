@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
-import { driver, type Driver, type DriveStep } from "driver.js";
-import "driver.js/dist/driver.css";
+import type { Driver, DriveStep } from "driver.js";
 
 // The header help button dispatches `onboarding:open` on window;
 // this component listens for it so the header doesn't need route-specific state.
@@ -76,27 +75,39 @@ export default function OnboardingTour({ open, onOpen, onClose }: OnboardingTour
 
   useEffect(() => {
     if (!open) return;
+    let cancelled = false;
 
-    const d = driver({
-      showProgress: true,
-      progressText: "{{current}} / {{total}}",
-      nextBtnText: "다음",
-      prevBtnText: "이전",
-      doneBtnText: "완료",
-      allowClose: true,
-      steps: STEPS,
-      onDestroyed: () => {
-        onCloseRef.current();
-      },
-      onCloseClick: () => {
-        d.destroy();
-      },
-    });
+    // driver.js is a client-only library; loading it dynamically keeps it out
+    // of the SSR bundle so the server doesn't try to import it at runtime.
+    (async () => {
+      const [{ driver }] = await Promise.all([
+        import("driver.js"),
+        import("driver.js/dist/driver.css"),
+      ]);
+      if (cancelled) return;
 
-    driverRef.current = d;
-    d.drive();
+      const d = driver({
+        showProgress: true,
+        progressText: "{{current}} / {{total}}",
+        nextBtnText: "다음",
+        prevBtnText: "이전",
+        doneBtnText: "완료",
+        allowClose: true,
+        steps: STEPS,
+        onDestroyed: () => {
+          onCloseRef.current();
+        },
+        onCloseClick: () => {
+          d.destroy();
+        },
+      });
+
+      driverRef.current = d;
+      d.drive();
+    })();
 
     return () => {
+      cancelled = true;
       if (driverRef.current) {
         driverRef.current.destroy();
         driverRef.current = null;
