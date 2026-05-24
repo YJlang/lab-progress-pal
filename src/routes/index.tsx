@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { fetchStudents } from "@/lib/students-client";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useOnboarding } from "@/hooks/use-onboarding";
 import { Button } from "@/components/ui/button";
 import { DashboardStats } from "@/components/DashboardStats";
 import { FilterBar } from "@/components/FilterBar";
@@ -11,6 +12,8 @@ import { StageCriteriaReference } from "@/components/StageCriteriaReference";
 import { StudentTable, StudentCard } from "@/components/StudentList";
 import { AddStudentModal } from "@/components/AddStudentModal";
 import { EditFlow } from "@/components/EditFlow";
+import { OnboardingBanner } from "@/components/OnboardingBanner";
+import OnboardingTour from "@/components/OnboardingTour";
 import type { Student } from "@/lib/types";
 
 export const Route = createFileRoute("/")({
@@ -35,6 +38,8 @@ function Dashboard() {
   const [stage, setStage] = useState("");
   const [paperFilter, setPaperFilter] = useState("__all__");
   const [algoFilter, setAlgoFilter] = useState("__all__");
+  const [tourOpen, setTourOpen] = useState(false);
+  const { status, markDismissed, markCompleted } = useOnboarding();
 
   const { data: students = [], isLoading } = useQuery({
     queryKey: ["students"],
@@ -84,6 +89,18 @@ function Dashboard() {
         </p>
       </div>
 
+      {status === "unseen" && (
+        <div className="mt-4">
+          <OnboardingBanner
+            onStart={() => {
+              markCompleted();
+              setTourOpen(true);
+            }}
+            onDismiss={markDismissed}
+          />
+        </div>
+      )}
+
       <div className="mt-6 space-y-5">
         <DashboardStats students={students} />
 
@@ -105,41 +122,53 @@ function Dashboard() {
               onAlgoFilterChange={setAlgoFilter}
             />
           </div>
-          <Button onClick={() => setAddOpen(true)} size="sm" className="h-9 text-sm shrink-0">
+          <Button
+            onClick={() => setAddOpen(true)}
+            size="sm"
+            className="h-9 text-sm shrink-0"
+            data-tour="add-student"
+          >
             <Plus className="h-4 w-4" />
             학생 추가
           </Button>
         </div>
 
-        {isLoading ? (
-          <div className="rounded-lg border bg-card px-4 py-12 text-center text-sm text-muted-foreground">
-            불러오는 중...
-          </div>
-        ) : students.length === 0 ? (
-          <div className="rounded-lg border bg-card px-4 py-14 text-center">
-            <p className="text-sm text-muted-foreground">아직 등록된 학부연구생이 없습니다.</p>
-            <Button className="mt-3" size="sm" onClick={() => setAddOpen(true)}>
-              <Plus className="h-4 w-4" />
-              학생 등록
-            </Button>
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="rounded-lg border bg-card px-4 py-12 text-center text-sm text-muted-foreground">
-            검색 결과가 없습니다.
-          </div>
-        ) : isMobile ? (
-          <div className="grid gap-3">
-            {filtered.map((s) => (
-              <StudentCard key={s.id} student={s} onEdit={setEditing} />
-            ))}
-          </div>
-        ) : (
-          <StudentTable students={filtered} onEdit={setEditing} />
-        )}
+        <div data-tour="student-list">
+          {isLoading ? (
+            <div className="rounded-lg border bg-card px-4 py-12 text-center text-sm text-muted-foreground">
+              불러오는 중...
+            </div>
+          ) : students.length === 0 ? (
+            <div className="rounded-lg border bg-card px-4 py-14 text-center">
+              <p className="text-sm text-muted-foreground">아직 등록된 학부연구생이 없습니다.</p>
+              <Button className="mt-3" size="sm" onClick={() => setAddOpen(true)}>
+                <Plus className="h-4 w-4" />
+                학생 등록
+              </Button>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="rounded-lg border bg-card px-4 py-12 text-center text-sm text-muted-foreground">
+              검색 결과가 없습니다.
+            </div>
+          ) : isMobile ? (
+            <div className="grid gap-3">
+              {filtered.map((s) => (
+                <StudentCard key={s.id} student={s} onEdit={setEditing} />
+              ))}
+            </div>
+          ) : (
+            <StudentTable students={filtered} onEdit={setEditing} />
+          )}
+        </div>
       </div>
 
       <AddStudentModal open={addOpen} onOpenChange={setAddOpen} />
       <EditFlow student={editing} onClose={() => setEditing(null)} />
+      <OnboardingTour
+        open={tourOpen}
+        onOpen={() => setTourOpen(true)}
+        onClose={() => setTourOpen(false)}
+      />
     </main>
   );
 }

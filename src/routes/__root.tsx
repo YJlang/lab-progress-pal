@@ -9,7 +9,8 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
-import { Moon, Sun } from "lucide-react";
+import { HelpCircle, Moon, Sun } from "lucide-react";
+import { ONBOARDING_OPEN_EVENT } from "@/components/OnboardingTour";
 
 import appCss from "../styles.css?url";
 
@@ -144,14 +145,25 @@ function RootComponent() {
                 INC Lab 학부연구생
               </span>
             </Link>
-            <button
-              type="button"
-              onClick={toggle}
-              className="ml-3 shrink-0 rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-              aria-label={dark ? "라이트 모드로 전환" : "다크 모드로 전환"}
-            >
-              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </button>
+            <div className="ml-3 flex shrink-0 items-center gap-1">
+              <button
+                type="button"
+                data-tour="help"
+                onClick={() => window.dispatchEvent(new Event(ONBOARDING_OPEN_EVENT))}
+                className="rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                aria-label="안내 다시 보기"
+              >
+                <HelpCircle className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={toggle}
+                className="rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                aria-label={dark ? "라이트 모드로 전환" : "다크 모드로 전환"}
+              >
+                {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
         </header>
         <Outlet />

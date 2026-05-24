@@ -24,7 +24,7 @@ export function StageCriteriaReference() {
   const allExpanded = expanded.size === STAGE_KEYS.length;
 
   return (
-    <section className="rounded-lg border bg-card">
+    <section data-tour="stage-reference" className="rounded-lg border bg-card">
       <div className="flex items-center justify-between border-b px-4 py-2.5">
         <h2 className="text-base font-semibold text-foreground">Progress 기준</h2>
         <button
