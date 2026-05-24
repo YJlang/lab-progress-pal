@@ -24,6 +24,7 @@ import {
 import { STAGE_KEYS, STAGES, type StageKey } from "@/lib/stages";
 import { createStudent } from "@/lib/students.functions";
 import { createStudentSchema } from "@/lib/schemas";
+import { HelpPopover } from "./HelpPopover";
 
 interface Props {
   open: boolean;
@@ -126,7 +127,15 @@ export function AddStudentModal({ open, onOpenChange }: Props) {
               />
             </Field>
           </div>
-          <Field label="대표 단계">
+          <Field
+            label="대표 단계"
+            help={
+              <HelpPopover title="대표 단계">
+                학생 카드에 표시되는 주요 단계입니다. 현재 가장 활발하게 진행 중이거나 대표하고 싶은
+                단계를 선택해주세요. 진행률 계산에는 영향을 주지 않습니다.
+              </HelpPopover>
+            }
+          >
             <Select
               value={form.representativeStage}
               onValueChange={(v) => setForm({ ...form, representativeStage: v as StageKey })}
@@ -144,7 +153,16 @@ export function AddStudentModal({ open, onOpenChange }: Props) {
             </Select>
           </Field>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="4자리 PIN" error={errors["pin"]}>
+            <Field
+              label="4자리 PIN"
+              error={errors["pin"]}
+              help={
+                <HelpPopover title="PIN 안내">
+                  본인 정보를 수정하거나 삭제할 때 사용하는 비밀번호입니다. 4자리 숫자로 설정하며,
+                  분실 시 복구가 어려우니 잊지 않도록 주의해주세요.
+                </HelpPopover>
+              }
+            >
               <Input
                 inputMode="numeric"
                 value={form.pin}
@@ -196,14 +214,19 @@ function Field({
   label,
   error,
   children,
+  help,
 }: {
   label: string;
   error?: string;
   children: React.ReactNode;
+  help?: React.ReactNode;
 }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm font-medium text-muted-foreground">{label}</Label>
+      <Label className="text-sm font-medium text-muted-foreground">
+        {label}
+        {help && <span className="ml-1.5 inline-flex align-middle">{help}</span>}
+      </Label>
       {children}
       {error && <p className="text-xs text-destructive">{error}</p>}
     </div>

@@ -82,6 +82,7 @@ export function PinModal({ open, studentId, studentName, onCancel, onVerified }:
             className="text-center text-lg tracking-[0.5em]"
           />
           {error && <p className="text-sm text-destructive">{error}</p>}
+          <p className="text-xs text-muted-foreground">PIN을 잊으셨다면 운영자에게 문의해주세요.</p>
           <DialogFooter className="gap-2 sm:gap-2">
             <Button type="button" variant="ghost" onClick={onCancel}>
               취소

@@ -44,6 +44,7 @@ import {
 import { updateStudent, deleteStudent } from "@/lib/students.functions";
 import type { Student } from "@/lib/types";
 import { ChecklistSection } from "./ChecklistSection";
+import { HelpPopover } from "./HelpPopover";
 
 interface Props {
   open: boolean;
@@ -168,7 +169,15 @@ export function EditStudentModal({ open, student, pin, onClose }: Props) {
                     />
                   </Field>
                 </div>
-                <Field label="대표 단계">
+                <Field
+                  label="대표 단계"
+                  help={
+                    <HelpPopover title="대표 단계">
+                      학생 카드에 표시되는 주요 단계입니다. 현재 가장 활발하게 진행 중이거나
+                      대표하고 싶은 단계를 선택해주세요. 진행률 계산에는 영향을 주지 않습니다.
+                    </HelpPopover>
+                  }
+                >
                   <Select
                     value={representativeStage}
                     onValueChange={(v) => setRepresentativeStage(v as StageKey)}
@@ -198,6 +207,21 @@ export function EditStudentModal({ open, student, pin, onClose }: Props) {
               <TabsContent value="stages" className="space-y-3">
                 <p className="text-sm text-muted-foreground">
                   각 단계의 상태를 독립적으로 설정합니다.
+                  <span className="ml-1.5 inline-flex align-middle">
+                    <HelpPopover title="단계 상태와 진행률" align="start">
+                      <p>각 단계는 4가지 상태로 표시합니다:</p>
+                      <ul className="mt-1 space-y-0.5 pl-3">
+                        <li>미시작 — 시작 전</li>
+                        <li>진행 중 — 학습 시작</li>
+                        <li>부분 달성 — 핵심은 익혔으나 일부 미흡</li>
+                        <li>달성 — 기준을 모두 충족</li>
+                      </ul>
+                      <p className="mt-2">
+                        대표 단계와 별개로 각 단계를 독립적으로 기록할 수 있고, 상태와 체크리스트가
+                        함께 전체 진행률에 반영됩니다.
+                      </p>
+                    </HelpPopover>
+                  </span>
                 </p>
                 {STAGES.map((stage) => (
                   <div key={stage.key} className="rounded-md border p-3">
@@ -240,7 +264,17 @@ export function EditStudentModal({ open, student, pin, onClose }: Props) {
                 ))}
               </TabsContent>
 
-              <TabsContent value="checklist">
+              <TabsContent value="checklist" className="space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  체크 항목을 표시하면 해당 단계의 진행률이 올라가고, 전체 진행률 평균에도
+                  반영됩니다.
+                  <span className="ml-1.5 inline-flex align-middle">
+                    <HelpPopover title="체크리스트와 진행률" align="start">
+                      각 단계별로 세부 학습 항목이 있습니다. 항목을 체크하면 그 단계의 진행률이 100%
+                      가까이 올라가고, 모든 단계의 평균이 학생 카드의 전체 진행률로 표시됩니다.
+                    </HelpPopover>
+                  </span>
+                </p>
                 <ChecklistSection state={checklist} onChange={setChecklist} />
               </TabsContent>
             </div>
@@ -290,10 +324,21 @@ export function EditStudentModal({ open, student, pin, onClose }: Props) {
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({
+  label,
+  children,
+  help,
+}: {
+  label: string;
+  children: React.ReactNode;
+  help?: React.ReactNode;
+}) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm font-medium text-muted-foreground">{label}</Label>
+      <Label className="text-sm font-medium text-muted-foreground">
+        {label}
+        {help && <span className="ml-1.5 inline-flex align-middle">{help}</span>}
+      </Label>
       {children}
     </div>
   );
