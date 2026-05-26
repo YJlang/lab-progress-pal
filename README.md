@@ -18,18 +18,18 @@
 
 ## 기술 스택
 
-| 영역 | 도구 |
-|---|---|
-| 프레임워크 | [TanStack Start](https://tanstack.com/start) (React 19 + SSR) |
-| 라우팅 | TanStack Router (file-based) |
-| 데이터 페칭 | TanStack React Query |
-| 백엔드 | [Supabase](https://supabase.com) (Postgres + PostgREST + RLS) |
-| UI | [shadcn/ui](https://ui.shadcn.com) + Tailwind CSS v4 + lucide-react |
-| 폼 / 검증 | react-hook-form + Zod |
-| 온보딩 | driver.js |
-| 빌드 / 런타임 | Vite 7 + Bun 1.3 + Node 24 |
-| 배포 | AWS Lightsail (Ubuntu) + nginx + Let's Encrypt |
-| CI/CD | GitHub Actions |
+| 영역          | 도구                                                                |
+| ------------- | ------------------------------------------------------------------- |
+| 프레임워크    | [TanStack Start](https://tanstack.com/start) (React 19 + SSR)       |
+| 라우팅        | TanStack Router (file-based)                                        |
+| 데이터 페칭   | TanStack React Query                                                |
+| 백엔드        | [Supabase](https://supabase.com) (Postgres + PostgREST + RLS)       |
+| UI            | [shadcn/ui](https://ui.shadcn.com) + Tailwind CSS v4 + lucide-react |
+| 폼 / 검증     | react-hook-form + Zod                                               |
+| 온보딩        | driver.js                                                           |
+| 빌드 / 런타임 | Vite 7 + Bun 1.3 + Node 24                                          |
+| 배포          | AWS Lightsail (Ubuntu) + nginx + Let's Encrypt                      |
+| CI/CD         | GitHub Actions                                                      |
 
 ---
 
@@ -93,19 +93,19 @@ erDiagram
 
 ### 주요 컬럼
 
-| 컬럼 | 타입 | 설명 |
-|---|---|---|
-| `id` | uuid | 학생 고유 ID (PK) |
-| `name` | text | 이름 |
-| `academic_year` | text | 학년도 (예: "2026") |
-| `department` | text | 학과 (선택) |
-| `representative_stage` | text | 카드에 표시될 대표 단계 키 (`"1"`–`"6"`) |
-| `stage_statuses` | jsonb | 단계별 상태 — `{"1": "미시작", "1.5": "달성", ...}` |
-| `checklist_items` | jsonb | 단계별 체크 항목 — `{"1": {"py_vars": true, ...}, ...}` |
-| `notes_by_stage` | jsonb | 단계별 메모 |
-| `progress_note` | text | 전체 학습 메모 |
-| `pin_code` | text | 수정/삭제 시 사용하는 4자리 비밀번호 (해시 없이 평문 저장 — **개선 여지 있음**) |
-| `created_at`, `last_updated_at` | timestamptz | 생성/수정 시각 |
+| 컬럼                            | 타입        | 설명                                                                            |
+| ------------------------------- | ----------- | ------------------------------------------------------------------------------- |
+| `id`                            | uuid        | 학생 고유 ID (PK)                                                               |
+| `name`                          | text        | 이름                                                                            |
+| `academic_year`                 | text        | 학년도 (예: "2026")                                                             |
+| `department`                    | text        | 학과 (선택)                                                                     |
+| `representative_stage`          | text        | 카드에 표시될 대표 단계 키 (`"1"`–`"6"`)                                        |
+| `stage_statuses`                | jsonb       | 단계별 상태 — `{"1": "미시작", "1.5": "달성", ...}`                             |
+| `checklist_items`               | jsonb       | 단계별 체크 항목 — `{"1": {"py_vars": true, ...}, ...}`                         |
+| `notes_by_stage`                | jsonb       | 단계별 메모                                                                     |
+| `progress_note`                 | text        | 전체 학습 메모                                                                  |
+| `pin_code`                      | text        | 수정/삭제 시 사용하는 4자리 비밀번호 (해시 없이 평문 저장 — **개선 여지 있음**) |
+| `created_at`, `last_updated_at` | timestamptz | 생성/수정 시각                                                                  |
 
 ### 접근 권한
 
@@ -117,28 +117,28 @@ erDiagram
 
 ## 학습 단계 (Stage) 시스템
 
-| Stage | 제목 | 핵심 기준 |
-|---|---|---|
-| S1 | Python 기초 | Python 기본 문법 + 150줄 이내 프로그램 작성 |
-| S1.5 | C 언어 | 함수, 배열, 구조체, 포인터, call by value/reference |
-| S2 | 외부 기기 실행 | Raspberry Pi 등에서 C/Python 프로그램 실행 |
-| S2.5 | 비 Windows OS | Linux / Raspbian 설치 및 활용 |
-| S3 | 자료구조와 알고리즘 | 스택/큐/트리, 정렬/탐색, 재귀/DP 기초 |
-| S3.5 | 알고리즘 문제 풀이 | 100문제 이상 풀이 경험 |
-| S4 | 국내 학회 발표 | 2페이지 논문 작성 + 포스터 발표 |
-| S5 | 국제 학회 발표 | 영문 논문 + 국제 학회 발표 |
-| S6 | SCIE 논문 제출 | SCIE 저널 풀논문 작성 + 제출 |
+| Stage | 제목                | 핵심 기준                                           |
+| ----- | ------------------- | --------------------------------------------------- |
+| S1    | Python 기초         | Python 기본 문법 + 150줄 이내 프로그램 작성         |
+| S1.5  | C 언어              | 함수, 배열, 구조체, 포인터, call by value/reference |
+| S2    | 외부 기기 실행      | Raspberry Pi 등에서 C/Python 프로그램 실행          |
+| S2.5  | 비 Windows OS       | Linux / Raspbian 설치 및 활용                       |
+| S3    | 자료구조와 알고리즘 | 스택/큐/트리, 정렬/탐색, 재귀/DP 기초               |
+| S3.5  | 알고리즘 문제 풀이  | 100문제 이상 풀이 경험                              |
+| S4    | 국내 학회 발표      | 2페이지 논문 작성 + 포스터 발표                     |
+| S5    | 국제 학회 발표      | 영문 논문 + 국제 학회 발표                          |
+| S6    | SCIE 논문 제출      | SCIE 저널 풀논문 작성 + 제출                        |
 
 각 단계는 **순서와 무관**하게 독립적으로 기록할 수 있습니다 (대표 단계는 카드에 노출될 단계 선택).
 
 ### 단계 상태 (4가지)
 
-| 상태 | 가중치 |
-|---|---|
-| 미시작 | 0 % |
-| 진행 중 | 25 % |
-| 부분 달성 | 60 % |
-| 달성 | 100 % |
+| 상태      | 가중치 |
+| --------- | ------ |
+| 미시작    | 0 %    |
+| 진행 중   | 25 %   |
+| 부분 달성 | 60 %   |
+| 달성      | 100 %  |
 
 ### 진행률 계산
 
@@ -192,13 +192,13 @@ bun run dev
 
 ### 사용 가능한 스크립트
 
-| 스크립트 | 용도 |
-|---|---|
-| `bun run dev` | Vite 개발 서버 (HMR) |
-| `bun run build` | 프로덕션 빌드 (`dist/client`, `dist/server`) |
-| `bun run preview` | 빌드 결과물 로컬 프리뷰 |
-| `bun run lint` | ESLint + prettier 검사 (CI 게이트) |
-| `bun run format` | prettier 일괄 적용 |
+| 스크립트          | 용도                                         |
+| ----------------- | -------------------------------------------- |
+| `bun run dev`     | Vite 개발 서버 (HMR)                         |
+| `bun run build`   | 프로덕션 빌드 (`dist/client`, `dist/server`) |
+| `bun run preview` | 빌드 결과물 로컬 프리뷰                      |
+| `bun run lint`    | ESLint + prettier 검사 (CI 게이트)           |
+| `bun run format`  | prettier 일괄 적용                           |
 
 ---
 
@@ -307,11 +307,11 @@ flowchart LR
 
 ### 필요한 GitHub Secrets
 
-| Secret | 용도 |
-|---|---|
-| `SSH_PRIVATE_KEY` | EC2 접속용 SSH 개인키 (전체 내용, BEGIN/END 라인 포함) |
-| `VITE_SUPABASE_URL` | 빌드 시 클라이언트 번들에 주입 |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | 빌드 시 클라이언트 번들에 주입 |
+| Secret                          | 용도                                                   |
+| ------------------------------- | ------------------------------------------------------ |
+| `SSH_PRIVATE_KEY`               | EC2 접속용 SSH 개인키 (전체 내용, BEGIN/END 라인 포함) |
+| `VITE_SUPABASE_URL`             | 빌드 시 클라이언트 번들에 주입                         |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | 빌드 시 클라이언트 번들에 주입                         |
 
 `Settings → Secrets and variables → Actions`에서 등록. 추가는 저장소 관리자만 가능.
 
@@ -363,19 +363,13 @@ chore: stop tracking AI dev tooling
 
 ## 운영 메모
 
-| 항목 | 위치 |
-|---|---|
-| 라이브 URL | https://inclab.cloud |
-| 호스팅 | AWS Lightsail (Ubuntu 20.04) |
-| nginx 사이트 설정 | `/etc/nginx/sites-enabled/lab-progress-pal` |
-| TLS | Let's Encrypt (Certbot 자동 갱신) |
-| 앱 디렉토리 | `/home/ubuntu/lab-progress-pal/` |
-| 프로세스 | `bun deploy-server.mjs` (PID는 `lab-progress-pal.pid`) |
-| 로그 | `~/lab-progress-pal/nohup.out` |
+| 항목              | 위치                                                        |
+| ----------------- | ----------------------------------------------------------- |
+| 라이브 URL        | https://inclab.cloud                                        |
+| 호스팅            | AWS Lightsail (Ubuntu 20.04)                                |
+| nginx 사이트 설정 | `/etc/nginx/sites-enabled/lab-progress-pal`                 |
+| TLS               | Let's Encrypt (Certbot 자동 갱신)                           |
+| 앱 디렉토리       | `/home/ubuntu/lab-progress-pal/`                            |
+| 프로세스          | `bun deploy-server.mjs` (PID는 `lab-progress-pal.pid`)      |
+| 로그              | `~/lab-progress-pal/nohup.out`                              |
 | Supabase 대시보드 | https://supabase.com/dashboard/project/ghptyqnpjppzhnnzzqxu |
-
----
-
-## 라이선스
-
-내부 사용 (반오픈소스). 외부 배포 전 운영자와 상의해주세요.
