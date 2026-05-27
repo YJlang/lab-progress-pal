@@ -105,15 +105,26 @@ export const STAGES: Stage[] = [
   {
     key: "3.5",
     title: "알고리즘 문제 풀이",
-    fullDescription: "쉬운 난이도라도 알고리즘 문제를 100개 이상 풀어본 경험이 있는 단계.",
-    shortDescription: "알고리즘 문제 100문제 이상 풀이 경험",
-    criteria: "쉬운 난이도 기준 100문제 이상.",
+    fullDescription:
+      "프로그래머스, 코드트리, 코드업, LeetCode 등 다양한 OJ 플랫폼에서 난이도별로 누적 100문제 이상 풀고, 본인의 풀이 과정을 회고하거나 다양한 접근법으로 설명할 수 있는 단계.",
+    shortDescription: "OJ 플랫폼 통합 100문제 (입문 25 + 기초 50 + 응용 25) + 풀이 회고/설명",
+    criteria:
+      "입문 25 + 기초 50 + 응용 25 = 통합 100문제 (사이트 무관) + 본인 풀이 모음 또는 다양한 접근법 설명 가능.",
     checklist: [
-      { key: "ps_25", label: "25문제 풀이" },
-      { key: "ps_50", label: "50문제 풀이" },
-      { key: "ps_75", label: "75문제 풀이" },
-      { key: "ps_100", label: "100문제 풀이" },
-      { key: "ps_explain", label: "풀이한 문제를 다른 사람에게 설명 가능" },
+      {
+        key: "ps_easy_25",
+        label: "입문 25문제 (프로그래머스 Lv.0~1 / 코드트리 입문 / LeetCode Easy)",
+      },
+      {
+        key: "ps_basic_50",
+        label: "기초 50문제 누적 (프로그래머스 Lv.1~2 / 코드트리 기초 / LeetCode Easy)",
+      },
+      {
+        key: "ps_applied_25",
+        label: "응용 25문제 누적 (프로그래머스 Lv.2 / 코드트리 응용 / LeetCode Medium 일부)",
+      },
+      { key: "ps_repo", label: "풀이 모음 GitHub repo 또는 회고 글 1편 이상" },
+      { key: "ps_explain", label: "한 문제를 다양한 접근법(시간/공간 복잡도)으로 설명 가능" },
     ],
   },
   {
