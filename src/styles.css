@@ -82,8 +82,10 @@
   --stage-3-fg: oklch(0.4 0.08 65);
   --stage-3_5-bg: oklch(0.94 0.03 40);
   --stage-3_5-fg: oklch(0.43 0.1 35);
-  --stage-4-bg: oklch(0.93 0.035 15);
-  --stage-4-fg: oklch(0.43 0.12 20);
+  --stage-4-bg: oklch(0.92 0.045 180);
+  --stage-4-fg: oklch(0.4 0.13 185);
+  --stage-4_5-bg: oklch(0.93 0.035 15);
+  --stage-4_5-fg: oklch(0.43 0.12 20);
   --stage-5-bg: oklch(0.93 0.04 340);
   --stage-5-fg: oklch(0.42 0.13 345);
   --stage-6-bg: oklch(0.93 0.04 300);

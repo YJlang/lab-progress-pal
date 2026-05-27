@@ -1,4 +1,4 @@
-export type StageKey = "1" | "1.5" | "2" | "2.5" | "3" | "3.5" | "4" | "5" | "6";
+export type StageKey = "1" | "1.5" | "2" | "2.5" | "3" | "3.5" | "4" | "4.5" | "5" | "6";
 
 export type StageStatus = "미시작" | "진행 중" | "부분 달성" | "달성";
 
@@ -118,6 +118,24 @@ export const STAGES: Stage[] = [
   },
   {
     key: "4",
+    title: "딥러닝 기초",
+    fullDescription:
+      "모두의 딥러닝(개정 4판)을 기반으로 신경망의 작동 원리부터 CNN, 전이학습, 자연어 처리 및 트랜스포머까지 직접 코드를 작성하며 이해한 단계.",
+    shortDescription: "회귀/MLP/CNN/RNN/Transformer 등 딥러닝 핵심 개념 학습 및 코드 실행",
+    criteria: "모두의 딥러닝 개정 4판 완독 + 텐서플로/케라스로 MLP·CNN 학습 코드 직접 작성 가능.",
+    checklist: [
+      { key: "dl_basics", label: "기초 수학과 환경 (코랩, 미분, 시그모이드, 로그)" },
+      { key: "dl_regression", label: "선형 회귀·로지스틱 회귀와 경사 하강법" },
+      { key: "dl_neural_net", label: "퍼셉트론·다층 퍼셉트론·오차 역전파" },
+      { key: "dl_model_data", label: "모델 설계·데이터 전처리·다중 분류 (소프트맥스/원핫)" },
+      { key: "dl_validation", label: "성능 검증·과적합 방지·k겹 교차 검증" },
+      { key: "dl_cnn", label: "CNN 이미지 인식 (컨볼루션/맥스풀링/드롭아웃) + 캐글 도전" },
+      { key: "dl_advanced", label: "GAN·오토인코더·전이학습·설명 가능한 AI" },
+      { key: "dl_nlp", label: "자연어 처리·RNN/LSTM·어텐션·트랜스포머" },
+    ],
+  },
+  {
+    key: "4.5",
     title: "국내 학회 발표",
     fullDescription:
       "2장 분량의 국내 학술대회 논문을 작성하고, 최소 포스터 발표를 해본 경험이 있는 단계.",
@@ -181,8 +199,9 @@ export const STAGE_ORDER: Record<StageKey, number> = {
   "3": 4,
   "3.5": 5,
   "4": 6,
-  "5": 7,
-  "6": 8,
+  "4.5": 7,
+  "5": 8,
+  "6": 9,
 };
 
 export const TOTAL_CHECKLIST_ITEMS = STAGES.reduce((sum, s) => sum + s.checklist.length, 0);
@@ -195,6 +214,7 @@ export const DEFAULT_STAGE_STATUSES: StageStatuses = {
   "3": "미시작",
   "3.5": "미시작",
   "4": "미시작",
+  "4.5": "미시작",
   "5": "미시작",
   "6": "미시작",
 };

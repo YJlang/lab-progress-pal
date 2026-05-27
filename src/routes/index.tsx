@@ -61,10 +61,13 @@ function Dashboard() {
       if (stage && s.representativeStage !== stage) return false;
       if (
         paperFilter === "yes" &&
-        !["달성", "부분 달성"].includes(s.stageStatuses["4"] ?? "미시작")
+        !["달성", "부분 달성"].includes(s.stageStatuses["4.5"] ?? "미시작")
       )
         return false;
-      if (paperFilter === "no" && ["달성", "부분 달성"].includes(s.stageStatuses["4"] ?? "미시작"))
+      if (
+        paperFilter === "no" &&
+        ["달성", "부분 달성"].includes(s.stageStatuses["4.5"] ?? "미시작")
+      )
         return false;
       if (
         algoFilter === "yes" &&

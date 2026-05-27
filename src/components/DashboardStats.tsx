@@ -29,7 +29,7 @@ export function DashboardStats({ students }: Props) {
       ["달성", "부분 달성", "진행 중"].includes(s.stageStatuses["3.5"] ?? "미시작"),
   ).length;
   const paperExp = students.filter((s) =>
-    ["달성", "부분 달성"].includes(s.stageStatuses["4"] ?? "미시작"),
+    ["달성", "부분 달성"].includes(s.stageStatuses["4.5"] ?? "미시작"),
   ).length;
 
   return (
